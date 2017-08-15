@@ -1,0 +1,11 @@
+atom-beautify
+atom-typescript
+autocomplete-python
+busy-signal
+editorconfig
+git-history
+intentions
+linter
+linter-flake8
+linter-ui-default
+python-indent
