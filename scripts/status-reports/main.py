@@ -8,9 +8,9 @@ MONTHS = ['', 'January', 'February', 'March', 'April', 'May', 'June', 'July',
           'August', 'September', 'October', 'November', 'December']
 
 
-def write_sprint_plan(date, features, task_assignments):
+def write_sprint_plan(prefix, date, features, task_assignments):
     month = MONTHS[int(date[4:6])]
-    with open('./output/sprint-planning-{}.txt'.format(date), 'w') as outfile:
+    with open('./output/{0}sprint-planning-{1}.txt'.format(prefix, date), 'w') as outfile:
         outfile.write('h2. Date: {0} {1} {2}\n\n'.format(date[6:8], month[0:3], date[0:4]))
         outfile.write('h2. Features\n\n')
         for f in features:
@@ -24,9 +24,9 @@ def write_sprint_plan(date, features, task_assignments):
             outfile.write('\n')
 
 
-def write_msr(date, component_tasks):
+def write_msr(prefix, date, component_tasks):
     month = MONTHS[int(date[4:6])]
-    with open('./output/msr-{}.md'.format(date), 'w') as outfile:
+    with open('./output/{0}msr-{1}.md'.format(prefix, date), 'w') as outfile:
         outfile.write('# P&E Characterization Monthly Status Report - {0} {1}\n\n'.format(month, date[0:4]))
         for k in component_tasks.keys():
             outfile.write('## {}\n\n'.format(k))
@@ -42,6 +42,8 @@ if __name__ == '__main__':
                         help='JIRA CSV export to format as Confluence Markdown')
     parser.add_argument('date', type=str,
                         help='Date associated with the document')
+    parser.add_argument('outfile_prefix', type=str,
+                        help='Prefix to add to output file name')
     args = parser.parse_args()
     with open(args.infile, newline='') as csvfile:
         reader = csv.reader(csvfile)
@@ -71,6 +73,6 @@ if __name__ == '__main__':
                     component_tasks[component].append(jira_task)
 
     if args.output_type == 'msr':
-        write_msr(args.date, component_tasks)
+        write_msr(args.outfile_prefix, args.date, component_tasks)
     elif args.output_type == 'sprint':
-        write_sprint_plan(args.date, features, task_assignments)
+        write_sprint_plan(args.outfile_prefix, args.date, features, task_assignments)
