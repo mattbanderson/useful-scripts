@@ -2,7 +2,6 @@
 
 import argparse
 import csv
-import datetime
 
 
 MONTHS = ['', 'January', 'February', 'March', 'April', 'May', 'June', 'July',
@@ -10,17 +9,19 @@ MONTHS = ['', 'January', 'February', 'March', 'April', 'May', 'June', 'July',
 
 
 def write_sprint_plan(date, features, task_assignments):
+    month = MONTHS[int(date[4:6])]
     with open('./output/sprint-planning-{}.txt'.format(date), 'w') as outfile:
-        outfile.write('h4. Date: {}\n\n'.format(date))
+        outfile.write('h2. Date: {0} {1} {2}\n\n'.format(date[6:8], month[0:3], date[0:4]))
         outfile.write('h2. Features\n\n')
         for f in features:
-            outfile.write('\t- {}\n'.format(f))
+            outfile.write('# {}\n'.format(f))
         outfile.write('\nh2. Task Assignments: \n\n')
         for k in task_assignments.keys():
             name = [c[0].upper() + c[1:] for c in k.split('.')]
             outfile.write('h3. {0} {1}\n'.format(name[0], name[1]))
             for value in task_assignments[k]:
-                    outfile.write('\t# {}\n'.format(value))
+                    outfile.write('# {}\n'.format(value))
+            outfile.write('\n')
 
 
 def write_msr(date, component_tasks):
@@ -32,7 +33,7 @@ def write_msr(date, component_tasks):
             for value in component_tasks[k]:
                     outfile.write('* {}\n'.format(value))
 
-
+# ./main.py sprint jira.csv 20180326
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('output_type', type=str, choices=['msr', 'sprint'],
