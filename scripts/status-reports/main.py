@@ -62,7 +62,8 @@ if __name__ == '__main__':
 
             if issue_type == 'New Feature':
                 features.append(jira_task)
-            elif (issue_type == 'Task' or issue_type == 'Bug') and assignee != '':
+            elif (issue_type == 'Task' or issue_type == 'Bug' or
+                  issue_type == 'Spike') and assignee != '':
                 if assignee != '':
                     if assignee not in task_assignments:
                         task_assignments[assignee] = []
