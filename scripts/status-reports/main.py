@@ -29,7 +29,7 @@ def write_msr(prefix, date, component_tasks):
     with open('./output/{0}msr-{1}.md'.format(prefix, date), 'w') as outfile:
         outfile.write('# P&E Characterization Monthly Status Report - {0} {1}\n\n'.format(month, date[0:4]))
         for k in component_tasks.keys():
-            outfile.write('## {}\n\n'.format(k))
+            outfile.write('\n## {}\n\n'.format(k))
             for value in component_tasks[k]:
                     outfile.write('* {}\n'.format(value))
 
