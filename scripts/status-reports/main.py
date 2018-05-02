@@ -7,6 +7,28 @@ import csv
 MONTHS = ['', 'January', 'February', 'March', 'April', 'May', 'June', 'July',
           'August', 'September', 'October', 'November', 'December']
 
+RECURRING_TASKS = [
+        'Managed sprint plan and tasking in DI2E JIRA',
+        'Gathered requirements and translated into development implementation',
+        'Supported bi-weekly status updates and monthly PMRs for government and SMEs'
+    ]
+
+TAG_DEV_TASKS = {
+        'Rasters': 'Task 2.1 Rasters',
+        'Environmentals': 'Task 2.2 Environmentals',
+        'Tau': 'Task 2.3 Tau',
+    }
+
+TAG_OTHER_TASKS = {
+        'Task 4 Testing': ['TBD'],
+        'Task 5 Configuration Control, Documentation': ['TBD'],
+        'Task 6 Training Support': [
+                'Supported bi-weekly onsite Rasters hands-on application review with government and SMEs',
+                'Updated change log with new release information',
+                'Tested and validated releases to onsite R&D environment'
+                ]
+        }
+
 
 def write_sprint_plan(prefix, date, features, task_assignments):
     month = MONTHS[int(date[4:6])]
@@ -20,7 +42,7 @@ def write_sprint_plan(prefix, date, features, task_assignments):
             name = [c[0].upper() + c[1:] for c in k.split('.')]
             outfile.write('h3. {0} {1}\n'.format(name[0], name[1]))
             for value in task_assignments[k]:
-                    outfile.write('# {}\n'.format(value))
+                outfile.write('# {}\n'.format(value))
             outfile.write('\n')
 
 
@@ -28,11 +50,16 @@ def write_msr(prefix, date, component_tasks):
     month = MONTHS[int(date[4:6])]
     with open('./output/{0}msr-{1}.md'.format(prefix, date), 'w') as outfile:
         outfile.write('# P&E Characterization Monthly Status Report - {0} {1}\n\n'.format(month, date[0:4]))
-        for k in component_tasks.keys():
-            outfile.write('\n## {}\n\n'.format(k))
+        for k in sorted(list(component_tasks.keys())):
+            outfile.write('\n## {}\n\n'.format(TAG_DEV_TASKS[k]))
+            for rt in RECURRING_TASKS:
+                outfile.write('* {}\n'.format(rt))
             for value in component_tasks[k]:
-                    outfile.write('* {}\n'.format(value))
-
+                outfile.write('* {}\n'.format(value))
+        for otk in sorted(list(TAG_OTHER_TASKS.keys())):
+            outfile.write('\n## {}\n\n'.format(otk))
+            for value in TAG_OTHER_TASKS[otk]:
+                outfile.write('* {}\n'.format(value))
 # ./main.py sprint jira.csv 20180326
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -58,6 +85,7 @@ if __name__ == '__main__':
             summary = row[header.index('Summary')]
             assignee = row[header.index('Assignee')]
             component = row[header.index('Component/s')]
+            labels = row[header.index('Labels')]
             jira_task = '{0}: {1}'.format(jira_number, summary)
 
             if issue_type == 'New Feature':
