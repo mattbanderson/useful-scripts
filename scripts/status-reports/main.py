@@ -60,7 +60,8 @@ def write_msr(prefix, date, component_tasks):
             outfile.write('\n## {}\n\n'.format(otk))
             for value in TAG_OTHER_TASKS[otk]:
                 outfile.write('* {}\n'.format(value))
-# ./main.py sprint jira.csv 20180326
+
+# ./main.py sprint jira.csv 20180326 prefix-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('output_type', type=str, choices=['msr', 'sprint'],
@@ -88,7 +89,7 @@ if __name__ == '__main__':
             labels = row[header.index('Labels')]
             jira_task = '{0}: {1}'.format(jira_number, summary)
 
-            if issue_type == 'New Feature':
+            if issue_type == 'New Feature' or issue_type == 'New Capability':
                 features.append(jira_task)
             elif (issue_type == 'Task' or issue_type == 'Bug' or
                   issue_type == 'Spike') and assignee != '':
