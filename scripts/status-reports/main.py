@@ -89,7 +89,7 @@ if __name__ == '__main__':
             labels = row[header.index('Labels')]
             jira_task = '{0}: {1}'.format(jira_number, summary)
 
-            if issue_type == 'New Feature' or issue_type == 'New Capability':
+            if issue_type == 'New Feature' or issue_type == 'Improvement':
                 features.append(jira_task)
             elif (issue_type == 'Task' or issue_type == 'Bug' or
                   issue_type == 'Spike') and assignee != '':
