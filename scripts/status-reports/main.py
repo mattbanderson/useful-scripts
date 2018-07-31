@@ -51,7 +51,8 @@ def write_msr(prefix, date, component_tasks):
     with open('./output/{0}msr-{1}.md'.format(prefix, date), 'w') as outfile:
         outfile.write('# P&E Characterization Monthly Status Report - {0} {1}\n\n'.format(month, date[0:4]))
         for k in sorted(list(component_tasks.keys())):
-            outfile.write('\n## {}\n\n'.format(TAG_DEV_TASKS[k]))
+            if k in TAG_DEV_TASKS:
+                outfile.write('\n## {}\n\n'.format(TAG_DEV_TASKS[k]))
             for rt in RECURRING_TASKS:
                 outfile.write('* {}\n'.format(rt))
             for value in component_tasks[k]:
