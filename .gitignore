@@ -2,3 +2,4 @@
 *.mp4
 *.flv
 */status-reports/output
+*/dcos/output
