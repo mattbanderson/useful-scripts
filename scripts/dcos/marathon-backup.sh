@@ -29,7 +29,6 @@ jq '.[] | del(.[].version) | del(.[].versionInfo) | del(.[].tasksStaged) | del(.
 configs=$(cat "./output/marathon-backup-full-cleaned-${DATE}.json")
 
 # Get unique top-level app group identifiers
-#IFS=" " read -r -a appGroups <<< $(echo $configs | jq -r '[.[] | .id | split("/")[1]] | flatten | unique | .[]')
 appGroups=($(echo $configs | jq -r '[.[] | .id | split("/")[1]] | flatten | unique | .[]'))
 
 # Create app-specific config files, which are subsets of the full config (helpful for organization or if a full backup is unnecessary
