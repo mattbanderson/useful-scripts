@@ -12,24 +12,25 @@ if [ "$1" = "" ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
   exit 0
 fi
 
-DATE=`date +%Y-%m-%d`
-OUTPUT_DIR='./output'
+DATE=$(date +%Y-%m-%d)
+OUTPUT_DIR="./output"
 MARATHON_ROOT_URL=$1
 
-echo "Starting backup, configuation files will be placed in $OUTPUT_DIR..."
+echo "Starting backup, configuration files will be placed in $OUTPUT_DIR..."
 mkdir -p $OUTPUT_DIR
 
 # Get all configs from Marathon API
-curl -s $MARATHON_ROOT_URL/v2/apps > ./output/marathon-backup-raw-${DATE}.json
+curl -s "$MARATHON_ROOT_URL/v2/apps" > "./output/marathon-backup-raw-${DATE}.json"
 
 # Pipe configs through jq to remove unwanted properties and output to file
 echo "Creating full configuration file..."
-cat ./output/marathon-backup-raw-${DATE}.json | jq '.[] | del(.[].version) | del(.[].versionInfo) | del(.[].tasksStaged) | del(.[].tasksRunning) | del(.[].tasksHealthy) | del(.[].tasksUnhealthy) | del(.[].deployments) | del(.[].executor)' > ./output/marathon-backup-full-cleaned-${DATE}.json
+jq '.[] | del(.[].version) | del(.[].versionInfo) | del(.[].tasksStaged) | del(.[].tasksRunning) | del(.[].tasksHealthy) | del(.[].tasksUnhealthy) | del(.[].deployments) | del(.[].executor)' < "./output/marathon-backup-raw-${DATE}.json" > "./output/marathon-backup-full-cleaned-${DATE}.json"
 
-configs=`cat ./output/marathon-backup-full-cleaned-${DATE}.json`
+configs=$(cat "./output/marathon-backup-full-cleaned-${DATE}.json")
 
 # Get unique top-level app group identifiers
-appGroups=(`echo $configs | jq -r '[.[] | .id | split("/")[1]] | flatten | unique | .[]'`)
+#IFS=" " read -r -a appGroups <<< $(echo $configs | jq -r '[.[] | .id | split("/")[1]] | flatten | unique | .[]')
+appGroups=($(echo $configs | jq -r '[.[] | .id | split("/")[1]] | flatten | unique | .[]'))
 
 # Create app-specific config files, which are subsets of the full config (helpful for organization or if a full backup is unnecessary
 echo "Creating app-specific configuration files..."
@@ -37,7 +38,7 @@ echo "Creating app-specific configuration files..."
 for i in "${appGroups[@]}"
 do
    : 
-   echo $configs | jq '.[] | select(.id | contains("'"$i"'"))' > ./output/$i.json
+   echo $configs | jq '.[] | select(.id | contains("'"$i"'"))' > "./output/$i.json"
 done
 
 echo "Backup complete."
