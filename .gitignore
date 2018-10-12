@@ -1,5 +1,6 @@
 *.mp3
 *.mp4
 *.flv
+*/sprint-reports/output
 */status-reports/output
 */dcos/output
