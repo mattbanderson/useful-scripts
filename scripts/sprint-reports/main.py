@@ -71,25 +71,9 @@ if __name__ == '__main__':
             outfile.write('"{0}", {1}, {2}, "{3}"\n'.format(
                     k, features[k]['estimate'], features[k]['tasks'], features[k]['created']))
 
-    with open('./output/{0}scope-change.csv'.format(args.outfile_prefix), 'w') as outfile:
-        outfile.write('"sprint","tasks","hours"\n')
-        sprint_start = datetime.datetime(2018, 3, 12)
-        sprint_number = 1
-        while sprint_start < datetime.datetime.now():
-            sprint_end = sprint_start + datetime.timedelta(14)
-            tasks = 0
-            hours = 0
-            for k in features.keys():
-                created_date = datetime.datetime.strptime(features[k]['created'], '%b %d, %Y %I:%M %p')
-                if created_date >= sprint_start and created_date < sprint_end:
-                    tasks += features[k]['tasks']
-                    hours += features[k]['estimate']
-            outfile.write('"S{0}",{1},{2}\n'.format(sprint_number, tasks, hours))
-            sprint_start = sprint_end
-            sprint_number += 1
 
-    with open('./output/{0}bugs.csv'.format(args.outfile_prefix), 'w') as outfile:
-        outfile.write('"sprint","opened","closed"\n')
+    with open('./output/{0}sprint-report.csv'.format(args.outfile_prefix), 'w') as outfile:
+        outfile.write('"sprint","opened","closed","tasks","hours"\n')
         sprint_start = datetime.datetime(2018, 3, 12)
         sprint_number = 0
         while sprint_start < datetime.datetime.now():
@@ -104,6 +88,14 @@ if __name__ == '__main__':
                     resolved_date = datetime.datetime.strptime(bug['resolved'], '%b %d, %Y %I:%M %p')
                     if resolved_date >= sprint_start and resolved_date < sprint_end:
                         closed += 1
-            outfile.write('"S{0}",{1},{2}\n'.format(sprint_number, opened, closed))
+            tasks = 0
+            hours = 0
+            for k in features.keys():
+                created_date = datetime.datetime.strptime(features[k]['created'], '%b %d, %Y %I:%M %p')
+                if created_date >= sprint_start and created_date < sprint_end:
+                    tasks += features[k]['tasks']
+                    hours += features[k]['estimate']
+            outfile.write('"S{0}",{1},{2},{3},{4}\n'.format(
+                    sprint_number, opened, closed, tasks, hours))
             sprint_start = sprint_end
             sprint_number += 1
