@@ -1,0 +1,14 @@
+Go to https://jira.di2e.net and click the "Create" button in the top navigation bar and populate the following information:
+
+Project: Accounts (AC)
+Issue Type: Add Me to Group
+Group Select: PIR-ReadWrite
+Justification: Support $PROJECT_NAME development
+
+Check "Create another" and then click the "Create" button.
+
+Submit a 2nd request with all the same information except this time the Group Select should be PIR-Stash-ReadWrite .
+
+PIR-ReadWrite gets you access to JIRA and Confluence, PIR-Stash-ReadWrite is for BitBucket.
+
+After creating each ticket, assign it to one of the approvers listed in the issue description of the ticket.
